@@ -1,4 +1,9 @@
 #!/usr/bin/env sh
+# Simple IP address analyzer.
+# Outputs DNS and location info of the given IP address.
+# Requires dig, whois, and lynx to be installed.
+# Usage:
+# ./ip2loc.sh YOUR_IP
 
 ip_arg=$1
 
@@ -10,11 +15,13 @@ echo "== WHOIS OUTPUT =="
 whois $ip_arg
 echo "== END WHOIS OUTPUT =="
 
+# Get the source dump from the blogama API.
 url=http://blogama.org/ip_query.php?output=raw\&ip=$ip_arg
 source=`lynx -source $url`
 echo "Received info: $source"
 echo
 
+# Split the fields from the response.
 ip=`echo $source | cut -d "," -f1`
 status=`echo $source | cut -d "," -f2`
 country_code=`echo $source | cut -d "," -f3`
